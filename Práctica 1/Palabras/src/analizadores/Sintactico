@@ -1,0 +1,53 @@
+package analizadores; 
+import java_cup.runtime.*;
+import java.util.ArrayList;
+
+parser code 
+{:
+    ArrayList<String> listaP = new ArrayList<String>();
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintactico.
+     **/ 
+    public void syntax_error(Symbol s){ 
+        System.out.println("Error Sintáctico en la Línea " + (s.left) +
+        " Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+    } 
+
+    /**
+     * Método al que se llama automáticamente ante algún error sintáctico 
+     * en el que ya no es posible una recuperación de errores.
+     **/ 
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.out.println("Error síntactico irrecuperable en la Línea " + 
+        (s.left)+ " Columna "+s.right+". Componente " + s.value + 
+        " no reconocido."); 
+    }  
+
+    public void write(String out) {
+        System.out.print(out);
+    }
+:} 
+
+terminal String id, coma;
+
+non terminal S;
+non terminal L;
+
+start with S;
+
+S::=L {: 
+    for(int i = 0; i < listaP.size(); i++){
+        if(i > 0){
+            System.out.print(listaP.get(i)+", ");
+        }
+    }
+    if(listaP.size() > 0){
+        System.out.println(listaP.get(0));
+    }
+ :}
+;
+
+L ::= L coma id:palabra {: listaP.add(palabra); :}
+    | id:palabra   {: listaP.add(palabra); :}
+;

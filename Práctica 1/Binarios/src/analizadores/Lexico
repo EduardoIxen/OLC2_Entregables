@@ -1,0 +1,33 @@
+package analizadores;
+import java_cup.runtime.Symbol;
+
+%% 
+%class Lexico
+%public 
+%line 
+%char 
+%cup 
+%unicode
+%ignorecase
+
+%init{ 
+    yyline = 1; 
+    yychar = 1; 
+%init} 
+
+BLANCOS=[ \r\t]+
+
+%%
+
+
+\n {yychar=1;}
+
+{BLANCOS} {}
+
+"0" {return new Symbol(sym.cero, yychar, yyline, yytext());}
+"1" {return new Symbol(sym.uno, yychar, yyline, yytext());}
+
+. {
+    System.out.println("Este es un error lexico: "+yytext()+
+    ", en la linea: "+yyline+", en la columna: "+yychar);
+}
